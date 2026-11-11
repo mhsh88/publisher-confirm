@@ -1,0 +1,25 @@
+spring:
+  main:
+    banner-mode: off
+    web-application-type: none
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    cache:
+      channel:
+        size: 1
+    template:
+      mandatory: true
+
+timeout-ms: 1000
+process-ms: 5
+send-rate: 1000
+duration-seconds: 60
+
+logging:
+  level:
+    root: WARN

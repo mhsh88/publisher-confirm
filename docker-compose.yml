@@ -1,0 +1,77 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  node1:
+    image: eclipse-temurin:17-jre
+    working_dir: /app
+    hostname: node1
+    volumes:
+      - ./node/target/node-1.0-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "app.jar"]
+    ports:
+      - "8081:8081"
+    environment:
+      HOSTNAME: node1
+      PEKKO_PORT: 2551
+      SEED_NODES: pekko://ClusterSystem@node1:2551
+      HTTP_PORT: 8081
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  node2:
+    image: eclipse-temurin:17-jre
+    working_dir: /app
+    hostname: node2
+    volumes:
+      - ./node/target/node-1.0-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "app.jar"]
+    environment:
+      HOSTNAME: node2
+      PEKKO_PORT: 2551
+      SEED_NODES: pekko://ClusterSystem@node1:2551
+      HTTP_PORT: 0
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      node1:
+        condition: service_started
+
+  node3:
+    image: eclipse-temurin:17-jre
+    working_dir: /app
+    hostname: node3
+    volumes:
+      - ./node/target/node-1.0-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "app.jar"]
+    environment:
+      HOSTNAME: node3
+      PEKKO_PORT: 2551
+      SEED_NODES: pekko://ClusterSystem@node1:2551
+      HTTP_PORT: 0
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      node1:
+        condition: service_started

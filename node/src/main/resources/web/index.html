@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Publisher Confirm · Cluster Radar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="top">
+      <div class="brand">
+        <span class="mark" aria-hidden="true"></span>
+        <div>
+          <h1>Cluster Radar</h1>
+          <p class="tag">Pekko sharding · Rabbit publisher confirm</p>
+        </div>
+      </div>
+      <div class="status" id="status">
+        <span class="dot"></span>
+        <span id="statusText">connecting…</span>
+      </div>
+    </header>
+
+    <section class="compose">
+      <label>
+        From worker
+        <input id="from" value="w1" autocomplete="off">
+      </label>
+      <label>
+        To worker
+        <input id="to" value="w2" autocomplete="off">
+      </label>
+      <label class="grow">
+        Message
+        <input id="body" value="hello across the mesh" autocomplete="off">
+      </label>
+      <button id="send" type="button">Send via Rabbit</button>
+    </section>
+
+    <section class="grid">
+      <div>
+        <div class="section-head">
+          <h2>Nodes</h2>
+          <span class="hint" id="nodeCount">0 up</span>
+        </div>
+        <div id="nodes" class="nodes"></div>
+      </div>
+      <div>
+        <div class="section-head">
+          <h2>Live traffic</h2>
+          <span class="hint">SENT → CONFIRM → RECEIVED</span>
+        </div>
+        <div id="feed" class="feed"></div>
+      </div>
+    </section>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
